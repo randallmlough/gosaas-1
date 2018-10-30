@@ -3,4 +3,4 @@
 clear
 rm gosaas-dev
 go build -o gosaas-dev
-./gosaas-dev -driver mongo -datasource "127.0.0.1"
+./gosaas-dev -driver bolt -datasource "db.bolt"

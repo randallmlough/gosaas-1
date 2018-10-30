@@ -1,5 +1,7 @@
 gosaas-dev
 
+db.bolt
+
 queue/tasks.cron
 
 # Binaries for programs and plugins
