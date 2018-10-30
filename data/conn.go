@@ -1,9 +1,7 @@
-// +build mem
-
 package data
 
 import (
-	"github.com/dstpierre/gosaas/data/mem"
+	"github.com/dstpierre/gosaas/data/bolt"
 	"github.com/dstpierre/gosaas/data/model"
 )
 
@@ -13,12 +11,10 @@ func (db *DB) Open(driverName, dataSourceName string) error {
 		return err
 	}
 
-	db.Users = &mem.Users{}
-	db.Webhooks = &mem.Webhooks{}
+	db.Users = &bolt.Users{}
 
-	// we use this to populate test data for unit test
-	db.CopySession = true
+	db.Connection = conn
 
-	db.Connection = &conn
+	db.DatabaseName = "gosaas"
 	return nil
 }

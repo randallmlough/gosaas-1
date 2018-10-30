@@ -35,25 +35,13 @@ func (a *API) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	ctx = context.WithValue(ctx, engine.ContextOriginalPath, r.URL.Path)
 
-	if a.DB.CopySession {
-		fmt.Println("copy mongo session")
-		a.DB.Users.RefreshSession(a.DB.Connection, a.DB.DatabaseName)
-		a.DB.Webhooks.RefreshSession(a.DB.Connection, a.DB.DatabaseName)
-
-		defer func() {
-			fmt.Println("closing mongo session")
-			a.DB.Users.Close()
-			a.DB.Webhooks.Close()
-		}()
-	}
-
 	ctx = context.WithValue(ctx, engine.ContextDatabase, a.DB)
 
 	var next *engine.Route
 	var head string
 	head, r.URL.Path = engine.ShiftPath(r.URL.Path)
-	if head == "user" {
-		next = newUser()
+	if head == "buy" {
+		next = newBuy()
 	} else {
 		next = newError(fmt.Errorf("path not found"), http.StatusNotFound)
 	}
