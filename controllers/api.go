@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/dstpierre/gosaas/data"
 	"github.com/dstpierre/gosaas/data/model"
@@ -32,6 +33,11 @@ func NewAPI() *API {
 }
 
 func (a *API) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if strings.HasPrefix(r.URL.Path, "/public/") {
+		http.ServeFile(w, r, r.URL.Path[1:])
+		return
+	}
+
 	ctx := r.Context()
 	ctx = context.WithValue(ctx, engine.ContextOriginalPath, r.URL.Path)
 
@@ -40,7 +46,7 @@ func (a *API) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var next *engine.Route
 	var head string
 	head, r.URL.Path = engine.ShiftPath(r.URL.Path)
-	if head == "buy" {
+	if head == "" || head == "buy" {
 		next = newBuy()
 	} else {
 		next = newError(fmt.Errorf("path not found"), http.StatusNotFound)

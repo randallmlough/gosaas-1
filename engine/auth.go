@@ -28,6 +28,11 @@ func Authenticator(next http.Handler) http.Handler {
 		ctx := r.Context()
 		mr := ctx.Value(ContextMinimumRole).(model.Roles)
 
+		if mr == model.RolePublic {
+			next.ServeHTTP(w, r.WithContext(ctx))
+			return
+		}
+
 		key, pat, err := extractKeyFromRequest(r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)

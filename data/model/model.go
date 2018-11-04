@@ -9,6 +9,7 @@ type Roles int
 const (
 	RoleAdmin Roles = iota
 	RoleUser
+	RolePublic
 )
 
 type Purchase struct {
